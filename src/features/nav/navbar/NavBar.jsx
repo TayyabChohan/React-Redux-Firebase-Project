@@ -5,9 +5,26 @@ import SignedoutMenue from "../Menues/SignedoutMenue";
 import SignedinMenue from "../Menues/SignedinMenue";
 
 class NavBar extends Component {
+  state={
+    authenticated:false
+  }
+
+  onhandleSignIn=()=>{
+    this.setState({
+      authenticated:true
+    })
+  }
+
+  onhandleSignOut=()=>{
+    this.setState({
+      authenticated:false
+    })
+  }
+
   render() {
+    const {authenticated}=this.state;
     return (
-      <div>
+      
         <Menu inverted fixed="top">
           <Container>
             <Menu.Item header as={Link} to="/">
@@ -24,13 +41,12 @@ class NavBar extends Component {
                 content="Create Event"
               />
             </Menu.Item>
-            <Menu.Item position="right">
-           <SignedoutMenue/>
-           <SignedinMenue/>
-           </Menu.Item>
+            {authenticated ? <SignedinMenue signOut={this.onhandleSignOut}/> :
+             <SignedoutMenue signIn={this.onhandleSignIn}/>}
+           
           </Container>
         </Menu>
-      </div>
+      
     );
   }
 }

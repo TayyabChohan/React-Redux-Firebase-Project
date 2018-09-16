@@ -1,7 +1,8 @@
 import React from 'react'
 import { Menu, Image,Dropdown } from 'semantic-ui-react'
+import { NavLink } from 'react-router-dom'
 
-const SignedinMenue = () => {
+const SignedinMenue = ({signOut}) => {
   return (
         <Menu.Item position="right">
           <Image avatar spaced="right" src='/assets/user.png' />
@@ -12,7 +13,7 @@ const SignedinMenue = () => {
               <Dropdown.Item text="My Network" icon="users" />
               <Dropdown.Item text="My Profile" icon="user" />
               <Dropdown.Item text="Settings" icon="settings" />
-              <Dropdown.Item text="Sign Out" icon="power" />
+              <Dropdown.Item onClick={signOut} as={NavLink} to="/"  text="Sign Out" icon="power" />
             </Dropdown.Menu>
           </Dropdown>
         </Menu.Item>
