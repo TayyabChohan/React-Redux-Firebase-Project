@@ -1,35 +1,30 @@
 import React, { Component } from "react";
 import { Segment, Form, Button } from "semantic-ui-react";
+import { connect } from 'react-redux'
 
-const EmptyEvent = {
+const mapState=(state, ownProps)=>{
+const Eventid=ownProps.match.params.id;
+let event={
   title: "",
   date: "",
   City: "",
   venue: "",
   HostedBy: ""
 };
+if(Eventid && state.events.length >0){
+  event=state.events.filter(event=>event.id === Eventid)[0]
+}
 
+return {
+  event
+}
+}
 class EventForm extends Component {
   state = {
-    event: EmptyEvent
+    event: Object.assign({}, this.props.event)
   };
 
-  componentDidMount = () => {
-    if (this.props.selectedAditEvent != null) {
-      this.setState({
-        event: this.props.selectedAditEvent
-      });
-    }
-  };
-
-  componentWillReceiveProps(NextProp) {
-    if (NextProp.selectedAditEvent !== this.props.selectedAditEvent) {
-      this.setState({
-        event: NextProp.selectedAditEvent || EmptyEvent
-      });
-    }
-  }
-
+ 
   onFormSubmit = evt => {
     evt.preventDefault();
     if (this.state.event.id) {
@@ -111,4 +106,4 @@ class EventForm extends Component {
     );
   }
 }
-export default EventForm;
+export default connect(mapState)(EventForm);
