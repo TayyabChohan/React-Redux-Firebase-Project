@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Segment, Form, Button } from "semantic-ui-react";
 import { connect } from 'react-redux'
+import { creatEvent, updateEvent } from '../EventAction'
 
 const mapState=(state, ownProps)=>{
 const Eventid=ownProps.match.params.id;
@@ -19,6 +20,11 @@ return {
   event
 }
 }
+const actions={
+  creatEvent,
+  updateEvent
+}
+
 class EventForm extends Component {
   state = {
     event: Object.assign({}, this.props.event)
@@ -28,9 +34,9 @@ class EventForm extends Component {
   onFormSubmit = evt => {
     evt.preventDefault();
     if (this.state.event.id) {
-      this.props.onUpdateEvent(this.state.event);
+      this.props.updateEvent(this.state.event);
     } else {
-      this.props.newcreatEvent(this.state.event);
+      this.props.creatEvent(this.state.event);
     }
   };
 
@@ -106,4 +112,4 @@ class EventForm extends Component {
     );
   }
 }
-export default connect(mapState)(EventForm);
+export default connect(mapState, actions)(EventForm);
