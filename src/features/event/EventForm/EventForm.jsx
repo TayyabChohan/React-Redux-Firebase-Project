@@ -7,7 +7,11 @@ import { reduxForm, Field } from "redux-form";
 import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
+import DateInput from "../../../app/common/form/DateInput";
+import  moment  from 'moment'
+
 import {composeValidators, combineValidators,isRequired,hasLengthGreaterThan } from "revalidate";
+import values from "redux-form/lib/values";
 
 const validate= combineValidators({
   title:isRequired({message:'The Event Title is Required'}),
@@ -16,7 +20,9 @@ const validate= combineValidators({
      hasLengthGreaterThan(4)({message:'Description needs to be at least 5 charactor'})
   )(),
   city:isRequired('city'),
-  venue:isRequired('venue')
+  venue:isRequired('venue'),
+  date:isRequired('date')
+
 })
 
 const mapState = (state, ownProps) => {
@@ -44,6 +50,7 @@ const category = [
 ];
 class EventForm extends Component {
   onFormSubmit = Values => {
+    values.date=moment(values.date).format()
     if (this.props.initialValues.id) {
       this.props.updateEvent(Values);
       this.props.history.goBack();
@@ -103,8 +110,11 @@ class EventForm extends Component {
               <Field
                 name="date"
                 type="text"
-                component={TextInput}
-                placeholder="Event Date"
+                component={DateInput}
+                dateFormat="YYYY-MM-DD HH:mm"
+                timeFormat="HH:mm"
+                showTimeSelect
+                placeholder="Date And Time Event"
               />
               <Button disabled={invalid || submitting || pristine} positive type="submit">
                 Submit
