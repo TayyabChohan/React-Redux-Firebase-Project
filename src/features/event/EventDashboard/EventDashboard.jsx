@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {Grid} from 'semantic-ui-react'
 import  EventList  from '../eventList/EventList'
 import { connect } from 'react-redux'
-import { DeleteEvent , updateEvent,creatEvent} from '../EventAction'
+import { DeleteEvent } from '../EventAction'
  class EventDashboard extends Component {
     
 handleDeleteEvent=(eventId)=>()=>{
