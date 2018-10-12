@@ -8,6 +8,7 @@ import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
 import DateInput from "../../../app/common/form/DateInput";
+import Placeinput from "../../../app/common/form/Placeinput";
 import  moment  from 'moment'
 
 import {composeValidators, combineValidators,isRequired,hasLengthGreaterThan } from "revalidate";
@@ -98,13 +99,15 @@ class EventForm extends Component {
               <Field
                 name="city"
                 type="text"
-                component={TextInput}
+                component={Placeinput}
+                options={{ types:['(cities)']}}
                 placeholder="Event City"
               />
               <Field
                 name="vanue"
                 type="text"
-                component={TextInput}
+                component={Placeinput}
+                options={{types:['establishment']}}
                 placeholder="Event Vanue"
               />
               <Field
