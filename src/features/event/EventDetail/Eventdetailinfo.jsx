@@ -7,8 +7,8 @@ import EventDetailedMap from './EventDetailedMap'
      showMap:false
    }
    showMapToggle=()=>{
-this.setState=( preveState=>({
-     showMap:!preveState.showMap
+this.setState( prevState=>({
+     showMap:!prevState.showMap
 }))
    }
   render() {
@@ -44,7 +44,8 @@ this.setState=( preveState=>({
                 <span>{event.venue}</span>
               </Grid.Column>
               <Grid.Column width={4}>
-                <Button onClick={this.showMapToggle} color="teal" size="tiny" content="Show Map" />
+                <Button onClick={this.showMapToggle} color="teal" size="tiny"
+                 content={this.state.showMap ? 'Hide Map':'Show Map'} />
               </Grid.Column>
             </Grid>
           </Segment>

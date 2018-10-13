@@ -70,8 +70,8 @@ class EventForm extends Component {
       this.props.change('city', selectedCity)
     })    
   }
-  handlevenueSelection=(selectedvenue)=>{
-    geocodeByAddress(selectedvenue)
+  handleVenueSelection=(selectedVenue)=>{
+    geocodeByAddress(selectedVenue)
     .then(results=>getLatLng(results[0]))
      .then(LatLng=>{
        this.setState({
@@ -79,10 +79,9 @@ class EventForm extends Component {
        });
      })   
      .then(()=>{
-       this.props.change('venue', selectedvenue)
+       this.props.change('venue', selectedVenue)
      })    
-   }
-
+     console.log(this.state.venueLatLng.lat);   }
 
   handleScriptLoad=()=>this.setState({scriptLaoded:true});
   onFormSubmit = Values => {
@@ -146,7 +145,7 @@ class EventForm extends Component {
               />
               {this.state.scriptLaoded &&
               <Field
-                name="vanue"
+                name="venue"
                 type="text"
                 component={Placeinput}
                 options={{
@@ -154,8 +153,8 @@ class EventForm extends Component {
                   radius:1000,
                   types:['establishment']
                 }}
-                placeholder="Event Vanue"
-                onSelect={this.handlevenueSelection}
+                placeholder="Event Venue"
+                onSelect={this.handleVenueSelection}
               />
               }
               <Field
