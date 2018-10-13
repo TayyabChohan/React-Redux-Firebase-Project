@@ -1,14 +1,17 @@
+/*global google*/
 import React, { Component } from "react";
 import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { creatEvent, updateEvent } from "../EventAction";
 import cuid from "cuid";
+import  {geocodeByAddress, getLatLng} from "react-places-autocomplete";
 import { reduxForm, Field } from "redux-form";
 import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
 import DateInput from "../../../app/common/form/DateInput";
 import Placeinput from "../../../app/common/form/Placeinput";
+import Script  from 'react-load-script'
 import  moment  from 'moment'
 
 import {composeValidators, combineValidators,isRequired,hasLengthGreaterThan } from "revalidate";
@@ -50,8 +53,41 @@ const category = [
   { key: "travel", text: "Travel", value: "travel" }
 ];
 class EventForm extends Component {
+  state={
+    cityLatLng:{},
+    venueLatLng:{},
+    scriptLaoded:false
+  }
+  handleCitySelection=(selectedCity)=>{
+   geocodeByAddress(selectedCity)
+   .then(results=>getLatLng(results[0]))
+    .then(LatLng=>{
+      this.setState({
+        cityLatLng:LatLng
+      });
+    })   
+    .then(()=>{
+      this.props.change('city', selectedCity)
+    })    
+  }
+  handlevenueSelection=(selectedvenue)=>{
+    geocodeByAddress(selectedvenue)
+    .then(results=>getLatLng(results[0]))
+     .then(LatLng=>{
+       this.setState({
+         venueLatLng:LatLng
+       });
+     })   
+     .then(()=>{
+       this.props.change('venue', selectedvenue)
+     })    
+   }
+
+
+  handleScriptLoad=()=>this.setState({scriptLaoded:true});
   onFormSubmit = Values => {
     values.date=moment(values.date).format()
+    values.venueLatLng=this.state.venueLatLng;
     if (this.props.initialValues.id) {
       this.props.updateEvent(Values);
       this.props.history.goBack();
@@ -71,6 +107,10 @@ class EventForm extends Component {
     const {invalid,submitting, pristine }=this.props;
     return (
       <Grid>
+        <Script
+        url='https://maps.googleapis.com/maps/api/js?key=AIzaSyCDXHD4V410byBQEmewGkZl0rwhd6olbD0&libraries=places'
+        onLoad={this.handleScriptLoad}
+        />
         <Grid.Column width={10}>
           <Segment>
             <Form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
@@ -102,14 +142,22 @@ class EventForm extends Component {
                 component={Placeinput}
                 options={{ types:['(cities)']}}
                 placeholder="Event City"
+                onSelect={this.handleCitySelection}
               />
+              {this.state.scriptLaoded &&
               <Field
                 name="vanue"
                 type="text"
                 component={Placeinput}
-                options={{types:['establishment']}}
+                options={{
+                  location:new google.maps.LatLng(this.state.cityLatLng),
+                  radius:1000,
+                  types:['establishment']
+                }}
                 placeholder="Event Vanue"
+                onSelect={this.handlevenueSelection}
               />
+              }
               <Field
                 name="date"
                 type="text"
