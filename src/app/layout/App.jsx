@@ -10,6 +10,7 @@ import  NavBar  from '../../features/nav/navbar/NavBar.jsx'
 import  {Container  } from 'semantic-ui-react'
 import { Route ,Switch } from 'react-router-dom'
 import  testComponent  from '../../features/testArea/TestComponent'
+import ModalManager from '../../features/Modal/ModalManager'
 
 
 class App extends Component {
@@ -17,6 +18,7 @@ class App extends Component {
     return (
       
       <div>
+        <ModalManager/>
         <Switch>
         <Route exact path="/" component={HomePage} /> 
         </Switch>

@@ -81,7 +81,7 @@ class EventForm extends Component {
      .then(()=>{
        this.props.change('venue', selectedVenue)
      })    
-     console.log(this.state.venueLatLng.lat);   }
+       }
 
   handleScriptLoad=()=>this.setState({scriptLaoded:true});
   onFormSubmit = Values => {
