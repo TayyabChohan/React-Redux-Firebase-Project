@@ -27,4 +27,4 @@ const LoginForm = () => {
   );
 };
 
-export default reduxForm({form:'loginForm'})(LoginForm);
+export default reduxForm({form:'LoginForm'})(LoginForm);
