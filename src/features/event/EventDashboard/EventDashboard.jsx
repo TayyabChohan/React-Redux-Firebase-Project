@@ -3,7 +3,7 @@ import {Grid} from 'semantic-ui-react'
 import  EventList  from '../eventList/EventList'
 import { connect } from 'react-redux'
 import { DeleteEvent } from '../EventAction'
-import loadingComponent  from '../../../app/layout/loadingComponent'
+import LoadingComponent  from '../../../app/layout/LoadingComponent'
 
 const mapState=(state)=>({
   events:state.events,
@@ -22,7 +22,7 @@ handleDeleteEvent=(eventId)=>()=>{
 
   render() {
     const {events, loading}=this.props;
-    if(loading) return <loadingComponent/>
+    if(loading) return <LoadingComponent inverted={true} />
     return (
       
       <Grid>  
@@ -35,9 +35,7 @@ handleDeleteEvent=(eventId)=>()=>{
        
         </Grid.Column>
 
-        </Grid>
-
-      
+        </Grid>  
     );
     } 
 }
