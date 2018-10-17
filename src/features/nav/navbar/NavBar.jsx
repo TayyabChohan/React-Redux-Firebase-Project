@@ -7,7 +7,8 @@ import {openModal} from '../../Modal/modalActions';
 import { connect } from 'react-redux';
 import { signOut } from '../../auth/AuthActions'
 const actions={
-  openModal
+  openModal,
+  signOut
 }
 
 const mapState=(state)=>({
