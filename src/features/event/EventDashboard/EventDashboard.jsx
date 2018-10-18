@@ -4,6 +4,7 @@ import  EventList  from '../eventList/EventList'
 import { connect } from 'react-redux'
 import { DeleteEvent } from '../EventAction'
 import LoadingComponent  from '../../../app/layout/LoadingComponent'
+import  EventActivity  from '../EventActivity/EventActivity'
 
 const mapState=(state)=>({
   events:state.events,
@@ -32,7 +33,7 @@ handleDeleteEvent=(eventId)=>()=>{
         </Grid.Column>
 
         <Grid.Column width={6} >
-       
+           <EventActivity/>
         </Grid.Column>
 
         </Grid>  
