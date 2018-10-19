@@ -25,8 +25,8 @@ import format from 'date-fns/format'
                 </Segment>
                 <Segment>
                   <span>
-                    <Icon name="clock" />{ format(event.date, 'dddd Do MMMM ')} at {''}
-                    {format(event.date,'HH:mm')}
+                    <Icon name="clock" />{format(event.date.toDate(), 'dddd Do MMMM ')} at {''}
+                    {format(event.date.toDate(),'HH:mm')}
                     <Icon name="marker" /> {event.venue}
                   </span>
                 </Segment>
@@ -39,7 +39,7 @@ import format from 'date-fns/format'
                     </List>
                   
                 </Segment>
-                <Segment clearing>
+                <Segment clearing><span>{event.description}</span>
       <Button  onClick={DeleteEvent(event.id)} as="a" color="red" floated="right" content="Delete" />
         <Button   as={Link} to ={`/event/${event.id}`} color="teal" floated="right" content="View" />
 
