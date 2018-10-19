@@ -38,6 +38,9 @@ export const registerUser=(user)=>
                 dispatch(closeModal()); 
         }catch(error){
             console.log(error)
+            throw new SubmissionError({
+                _error:error.message
+              });
 
         }
     }
