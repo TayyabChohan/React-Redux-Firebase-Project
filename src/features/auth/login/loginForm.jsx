@@ -1,9 +1,10 @@
 import React from 'react';
-import { Form, Segment, Button,Label } from 'semantic-ui-react';
+import { Form, Segment, Button,Label, Divider } from 'semantic-ui-react';
 import { Field , reduxForm } from 'redux-form';
 import TextInput from '../../../app/common/form/TextInput';
 import { connect } from 'react-redux'
 import { login } from '../AuthActions'
+import  SocialLogin from '../SocialLogin/SocialLogin'
 const actions={
        login
 }
@@ -28,6 +29,10 @@ const LoginForm = ({login, handleSubmit, error}) => {
         <Button fluid size="large" color="teal">
           Login
         </Button>
+        <Divider horizontal>
+          or
+        </Divider>
+        <SocialLogin/>
       </Segment>
     </Form>
   );
