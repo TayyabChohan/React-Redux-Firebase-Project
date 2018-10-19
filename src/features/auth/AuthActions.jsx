@@ -23,7 +23,7 @@ export const registerUser=(user)=>
         const firebase=getFirebase();
         try{
             //creat user in the auth
-            let createdUser=await firebase.auth().createdUserWithEmailAndPasswor(user.email, user.password);
+            let createdUser=await firebase.auth().createUserWithEmailAndPassword(user.email, user.password);
              console.log(createdUser);
              //update auth user profile
                 await createdUser.updateProfile({

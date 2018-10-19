@@ -6,10 +6,9 @@ import SignedoutMenue from "../Menues/SignedoutMenue";
 import SignedinMenue from "../Menues/SignedinMenue";
 import {openModal} from '../../Modal/modalActions';
 import { connect } from 'react-redux';
-import { signOut } from '../../auth/AuthActions'
 const actions={
   openModal,
-  signOut
+  
 }
 
 const mapState=(state)=>({
