@@ -5,7 +5,7 @@ const configfirebase={
     authDomain: "revents-219119.firebaseapp.com",
     databaseURL: "https://revents-219119.firebaseio.com",
     projectId: "revents-219119",
-    storageBucket: "",
+    storageBucket: "revents-219119.appspot.com",
     messagingSenderId: "731085070434"
 
 }
