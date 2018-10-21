@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Segment, Form, Header, Divider, Button} from 'semantic-ui-react';
 import {Field, reduxForm} from 'redux-form';
 import DateInput from "../../../app/common/form/DateInput";
-import PlaceInput from "../../../app/common/form/PlaceInput";
+import Placeinput from "../../../app/common/form/Placeinput";
 import TextInput from "../../../app/common/form/TextInput";
 
 class BasicPage extends Component {
@@ -34,7 +34,7 @@ class BasicPage extends Component {
                         placeholder='Home Town'
                         options={{types: ['(cities)']}}
                         label='Female'
-                        component={PlaceInput}
+                        component={Placeinput}
                         width={8}
                     />
                     <Divider/>
@@ -45,4 +45,4 @@ class BasicPage extends Component {
     }
 }
 
-export default reduxForm({form: 'userProfile'})(BasicPage);
+export default reduxForm({form: 'userProfile', enableReinitialize:true})(BasicPage);

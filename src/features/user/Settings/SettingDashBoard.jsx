@@ -12,16 +12,17 @@ const actions = {
   updatePassword
 };
 const mapState=(state)=>({
-   providerId: state.firebase.auth.providerData[0].providerId
+   providerId: state.firebase.auth.providerData[0].providerId,
+   user: state.firebase.profile
 })
 
-const SettingDashBoard = ({ updatePassword,providerId }) => {
+const SettingDashBoard = ({ updatePassword,providerId, user }) => {
   return (
     <Grid>
       <Grid.Column width={12}>
         <Switch>
           <Redirect exact from="/Settings" to="/Settings/BasicPage" />
-          <Route path="/Settings/BasicPage" component={BasicPage} />
+          <Route path="/Settings/BasicPage" render={()=> <BasicPage initialValues={user}/>} />
           <Route path="/Settings/AboutPage" component={AboutPage} />
           <Route path="/Settings/PhotoPage" component={PhotoPage} />
           <Route
