@@ -8,21 +8,23 @@ import AcountPage from "./AcountPage";
 import { connect } from "react-redux";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { updatePassword } from "../../auth/AuthActions";
+import { updateProfile } from '../../user/userAction'
 const actions = {
-  updatePassword
+  updatePassword,
+  updateProfile
 };
 const mapState=(state)=>({
    providerId: state.firebase.auth.providerData[0].providerId,
    user: state.firebase.profile
 })
 
-const SettingDashBoard = ({ updatePassword,providerId, user }) => {
+const SettingDashBoard = ({ updatePassword,providerId, user,updateProfile }) => {
   return (
     <Grid>
       <Grid.Column width={12}>
         <Switch>
           <Redirect exact from="/Settings" to="/Settings/BasicPage" />
-          <Route path="/Settings/BasicPage" render={()=> <BasicPage initialValues={user}/>} />
+          <Route path="/Settings/BasicPage" render={()=> <BasicPage updateProfile={updateProfile} initialValues={user}/>} />
           <Route path="/Settings/AboutPage" component={AboutPage} />
           <Route path="/Settings/PhotoPage" component={PhotoPage} />
           <Route
