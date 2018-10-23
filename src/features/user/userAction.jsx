@@ -28,7 +28,7 @@ async (dispatch, getState, {getFirebase, getFirestore})=>{
   }
   try{
        //upload photo to firebase
-       let uploadedFile= await firebase.uploadedFile(file, path, null , options);
+       let uploadedFile= await firebase.uploadFile( path, file, null , options);
        //get url of image from firebase
        let downloadURL=await uploadedFile.uploadTaskSnapshot.downloadURL;
        //get userdoc from firebase
