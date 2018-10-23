@@ -15,6 +15,24 @@ import "cropperjs/dist/cropper.css";
 import { connect } from "react-redux";
 import { uploadProfileImage } from "../userAction";
 import { toastr } from "react-redux-toastr";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
+
+const query = ({ auth }) => {
+  return [
+    {
+      collection: "users",
+      doc: auth.uid,
+      subcollections: [{ collection: "photos" }],
+      storeAs: "photos"
+    }
+  ];
+};
+
+const mapState = state => ({
+  auth: state.firebase.auth,
+  profile: state.firebase.profile
+});
 
 const actions = {
   uploadProfileImage
@@ -151,7 +169,10 @@ class PhotosPage extends Component {
   }
 }
 
-export default connect(
-  null,
-  actions
+export default compose(
+  connect(
+    mapState,
+    actions
+  ),
+  firestoreConnect(auth => query(auth))
 )(PhotosPage);
