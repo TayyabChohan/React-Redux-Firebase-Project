@@ -17,3 +17,43 @@ async (dispatch, getState, {getFirebase})=>{
  }
  
 }
+export const uploadProfileImage=(file, fileName)=>
+async (dispatch, getState, {getFirebase, getFirestore})=>{
+  const firebase=getFirebase();
+  const firestore=getFirestore();
+  const user=firebase.auth().currentUser;
+  const path=`${user.uid}/user_iamge`
+  const options={
+    name:fileName
+  }
+  try{
+       //upload photo to firebase
+       let uploadedFile= await firebase.uploadedFile(file, path, null , options);
+       //get url of image from firebase
+       let downloadURL=await uploadedFile.uploadTaskSnapshot.downloadURL;
+       //get userdoc from firebase
+       let userDoc= await firestore.get(`users/${user.uid}`)
+       //if the user has photo , if not then update it with new photo
+       if(!userDoc.data().photoURL){
+         await firebase.updateProfile({
+           photoURL:downloadURL
+         });
+         await user.updateProfile({
+           photoURL:downloadURL
+         });
+       }
+       //add new photo to the collections
+       return await firestore.add({
+         collection:'users',
+         doc:user.uid,
+         subcollections:[{collection:'photos'}]
+       },{
+             name:fileName,
+             url:downloadURL      
+         })
+  }
+  catch(error){
+  console.log(error)
+  throw new  Error('Problem in uploading process')
+  }
+}
