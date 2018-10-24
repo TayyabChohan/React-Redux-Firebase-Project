@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { toastr } from 'react-redux-toastr';
-
+import  cuid  from 'cuid'
 export const updateProfile=(user)=>
 async (dispatch, getState, {getFirebase})=>{
  const firebase=getFirebase();
@@ -20,11 +20,12 @@ async (dispatch, getState, {getFirebase})=>{
 export const uploadProfileImage=(file, fileName)=>
 async (dispatch, getState, {getFirebase, getFirestore})=>{
   const firebase=getFirebase();
+  const imageName=cuid();
   const firestore=getFirestore();
   const user=firebase.auth().currentUser;
   const path=`${user.uid}/user_iamge`
   const options={
-    name:fileName
+    name:imageName
   }
   try{
        //upload photo to firebase
@@ -48,7 +49,7 @@ async (dispatch, getState, {getFirebase, getFirestore})=>{
          doc:user.uid,
          subcollections:[{collection:'photos'}]
        },{
-             name:fileName,
+             name:imageName,
              url:downloadURL      
          })
   }
