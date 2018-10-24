@@ -84,4 +84,36 @@ export const deletePhoto = photo => async (
     console.log(error);
     throw new Error("Oops Photo No deleted");
   }
+
 };
+
+export const setMainPhoto=photo=>
+async(dispatch, getState, {getFirebase, getFirestore})=>{
+     const firebase=getFirebase();
+  try{
+  return await firebase.updateProfile({
+    photoURL:photo.url
+  })
+  }
+  catch(error){
+    console.log(error);
+    throw new Error('Oops', 'Update is not working for mainProfile')
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
