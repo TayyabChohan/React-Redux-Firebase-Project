@@ -4,18 +4,18 @@ import { fetchsampledate } from '../../app/data/mockApi';
 import { toastr } from 'react-redux-toastr'
 import { createNewEvent } from '../../app/common/util/helpers'
 
-export const creatEvent=(event)=>{
+export const creatEvent=event=>{
    return async(dispatch, getState, {getFirestore})=>{
            const firestore=getFirestore();
            const user = firestore.auth().currentUser;
            const photoURL= getState().firebase.profile.photoURL;
-           let neWevent=createNewEvent(user, photoURL,event); 
+           let newEvent=createNewEvent(user, photoURL,event); 
 
        try{
-          let createdEvent= await firestore.add('events', neWevent);
-          await firestore.set(`event_attandee/${createdEvent.id}_${user.id}`,{
+          let createdEvent= await firestore.add('events', newEvent);
+          await firestore.set(`event_attendee/${createdEvent.id}_${user.uid}`,{
               eventId:createdEvent.id,
-              userId:user.id,
+              userId:user.uid,
               eventDate:event.date,
               host:true
 

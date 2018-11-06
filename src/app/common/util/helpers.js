@@ -15,8 +15,6 @@ return{
            dsiplayName:user.dsiplayName,
            host:true
 
-
-
        }
 
     }

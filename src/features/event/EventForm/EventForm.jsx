@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { creatEvent, updateEvent } from "../EventAction";
+import cuid from "cuid";
 import  {geocodeByAddress, getLatLng} from "react-places-autocomplete";
 import { reduxForm, Field } from "redux-form";
 import TextInput from "../../../app/common/form/TextInput";
@@ -12,9 +13,7 @@ import DateInput from "../../../app/common/form/DateInput";
 import Placeinput from "../../../app/common/form/Placeinput";
 import Script  from 'react-load-script'
 import  moment  from 'moment'
-
 import {composeValidators, combineValidators,isRequired,hasLengthGreaterThan } from "revalidate";
-import values from "redux-form/lib/values";
 
 const validate= combineValidators({
   title:isRequired({message:'The Event Title is Required'}),
@@ -84,15 +83,19 @@ class EventForm extends Component {
 
   handleScriptLoad=()=>this.setState({scriptLaoded:true});
   onFormSubmit = Values => {
-    values.date=moment(values.date).format()
-    values.venueLatLng=this.state.venueLatLng;
+    Values.date=moment(Values.date).format()
+    Values.venueLatLng=this.state.venueLatLng;
     if (this.props.initialValues.id) {
       this.props.updateEvent(Values);
       this.props.history.goBack();
     } else {
-      
-      
-      this.props.creatEvent(Values);
+      const newEvent = {
+        ...Values,
+        id: cuid(),
+        hostPhotoURL: "/assets/user.png",
+        hostedBy:"Tayaab"
+      };
+      this.props.creatEvent(newEvent);
       this.props.history.push("/events");
     }
   };
@@ -102,7 +105,7 @@ class EventForm extends Component {
     return (
       <Grid>
         <Script
-        url='https://maps.googleapis.com/maps/api/js?key=AIzaSyCDXHD4V410byBQEmewGkZl0rwhd6olbD0&libraries=places'
+        url="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqe2Hx0D8PX6MdqaIXKQvxr_ysHwj-I04&libraries=places"
         onLoad={this.handleScriptLoad}
         />
         <Grid.Column width={10}>
