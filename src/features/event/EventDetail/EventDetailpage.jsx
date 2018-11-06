@@ -6,25 +6,30 @@ import EventdetailSidebar from "./EventdetailSidebar";
 import { Grid } from "semantic-ui-react";
 import { connect } from 'react-redux'
 import { withFirestore } from 'react-redux-firebase'
+import {  toastr} from 'react-redux-toastr'
 
-const mapState=(state, ownProps)=>{
-const eventid=ownProps.match.params.id;
+
+const mapState=(state)=>{
+
 let event={};
-if(eventid && state.events.length>0){
-  event= state.events.filter(event=>event.id===eventid)[0];
+if(state.firestore.ordered.events && state.firestore.events[0]){
+  event= state.firestore.ordered.events[0];
   return{
     event
   }
 }
 }
 
-
  class EventdetailPage extends Component {
 
     async componentDidMount(){
-      const {firestore, match}=this.props;
+      const {firestore, history, match}=this.props;
       let event= await firestore.get(`events/${match.params.id}`);
-      console.log(event); 
+      if(!event.exists){
+
+        history.push('/events');
+        toastr.error('No', 'Event Not Found')
+      } 
     }
   render() {
     const {event}=this.props

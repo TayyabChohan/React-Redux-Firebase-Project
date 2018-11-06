@@ -5,11 +5,12 @@ import { toastr } from 'react-redux-toastr'
 import { createNewEvent } from '../../app/common/util/helpers'
 
 export const creatEvent=event=>{
-   return async(dispatch, getState, {getFirestore})=>{
+   return async(dispatch, getState,{getFirestore})=>{
            const firestore=getFirestore();
            const user = firestore.auth().currentUser;
            const photoURL= getState().firebase.profile.photoURL;
            let newEvent=createNewEvent(user, photoURL,event); 
+        
 
        try{
           let createdEvent= await firestore.add('events', newEvent);

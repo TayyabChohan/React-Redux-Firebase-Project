@@ -8,7 +8,7 @@ import LoadingComponent from "../../../app/layout/LoadingComponent";
 import EventActivity from "../EventActivity/EventActivity";
 
 const mapState = state => ({
-  revents: state.firestore.ordered.revents,
+  events: state.firestore.ordered.events,
   loading: state.async.loading
 });
 const actions = {
@@ -20,12 +20,12 @@ class EventDashboard extends Component {
   };
 
   render() {
-    const { revents, loading } = this.props;
+    const { events, loading } = this.props;
     if (loading) return <LoadingComponent inverted={true} />;
     return (
       <Grid>
         <Grid.Column width={10}>
-          <EventList DeleteEvent={this.handleDeleteEvent} Events={revents} />
+          <EventList DeleteEvent={this.handleDeleteEvent} Events={events} />
         </Grid.Column>
 
         <Grid.Column width={6}>
@@ -39,4 +39,4 @@ class EventDashboard extends Component {
 export default connect(
   mapState,
   actions
-)(firestoreConnect([{ collection: "revents" }])(EventDashboard));
+)(firestoreConnect([{ collection: "events" }])(EventDashboard));
