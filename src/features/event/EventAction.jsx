@@ -1,15 +1,26 @@
-import {CREATE_EVENT, DELETE_EVENT, UPDATE_EVENT, FETCH_EVENT } from './eventConstant'
+import { DELETE_EVENT, UPDATE_EVENT, FETCH_EVENT } from './eventConstant'
 import { asyncactionstart,asyncactionerror,asyncactionfinish } from '../async/asyncAction'
 import { fetchsampledate } from '../../app/data/mockApi';
 import { toastr } from 'react-redux-toastr'
+import { createNewEvent } from '../../app/common/util/helpers'
 
 export const creatEvent=(event)=>{
-   return async dispatch=>{
+   return async(dispatch, getState, {getFirestore})=>{
+           const firestore=getFirestore();
+           const user = firestore.auth().currentUser;
+           const photoURL= getState().firebase.profile.photoURL;
+           let neWevent=createNewEvent(user, photoURL,event); 
+
        try{
-           dispatch({
-            type: CREATE_EVENT,
-            payload: {event}
-        });
+          let createdEvent= await firestore.add('events', neWevent);
+          await firestore.set(`event_attandee/${createdEvent.id}_${user.id}`,{
+              eventId:createdEvent.id,
+              userId:user.id,
+              eventDate:event.date,
+              host:true
+
+          })
+
         toastr.success('Success','Event Has Been Created')
     } 
        catch(error){

@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { creatEvent, updateEvent } from "../EventAction";
-import cuid from "cuid";
 import  {geocodeByAddress, getLatLng} from "react-places-autocomplete";
 import { reduxForm, Field } from "redux-form";
 import TextInput from "../../../app/common/form/TextInput";
@@ -91,13 +90,9 @@ class EventForm extends Component {
       this.props.updateEvent(Values);
       this.props.history.goBack();
     } else {
-      const newEvent = {
-        ...Values,
-        id: cuid(),
-        hostPhotoURL: "/assets/user.png",
-        hostedBy:"Tayaab"
-      };
-      this.props.creatEvent(newEvent);
+      
+      
+      this.props.creatEvent(Values);
       this.props.history.push("/events");
     }
   };
