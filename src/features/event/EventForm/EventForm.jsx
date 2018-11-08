@@ -62,12 +62,12 @@ class EventForm extends Component {
   }
   async componentDidMount(){
        const {firestore, match}=this.props
-       let event= await firestore.get(`events/${match.params.id}`) 
-       if(event.exists){
-         this.setState({
-           venueLatLng:event.data().venueLatLng
-         })
-       }  
+        await firestore.setListener(`events/${match.params.id}`) 
+      // if(event.exists){
+        // this.setState({
+          // venueLatLng:event.data().venueLatLng
+         //})
+       //}  
   }
   handleCitySelection=(selectedCity)=>{
    geocodeByAddress(selectedCity)
@@ -98,6 +98,9 @@ class EventForm extends Component {
   onFormSubmit = Values => {
     Values.venueLatLng=this.state.venueLatLng
     if (this.props.initialValues.id) {
+      if(Object.keys(Values.venueLatLng).length===0){
+      Values.venueLatLng=this.props.event.venueLatLng
+      }
       this.props.updateEvent(Values);
       this.props.history.goBack();
     } else {
