@@ -19,7 +19,7 @@ return{
            going:true,
            joinDate:Date.now(),
            photoURL:photoURL ||'assets/user.png',
-           dsiplayName:user.displayName,
+           displayName:user.displayName,
            host:true
 
        }

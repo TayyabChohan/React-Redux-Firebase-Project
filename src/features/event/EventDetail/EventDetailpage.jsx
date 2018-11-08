@@ -13,7 +13,10 @@ const mapState = state => {
   if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
     event = state.firestore.ordered.events[0];
   }
-  return { event };
+  return { 
+    event,
+    auth: state.firebase.auth
+   };
 };
 class EventdetailPage extends Component {
   async componentDidMount() {
@@ -26,13 +29,15 @@ class EventdetailPage extends Component {
   }
 
   render() {
-    const { event } = this.props;
+    const { event, auth } = this.props;
     const attendees =
       event && event.attendees && objectToArray(event.attendees);
+      const isHost=event.hostUid===auth.uid;
+      const isGiong=attendees && attendees.some(a => a.id===auth.uid) 
     return (
       <Grid>
         <Grid.Column width={10}>
-          <Eventdetailheader event={event} />
+          <Eventdetailheader event={event}  isHost={isHost} isGiong={isGiong} />
           <Eventdetailinfo event={event} />
           <EventdetailChats />
         </Grid.Column>
