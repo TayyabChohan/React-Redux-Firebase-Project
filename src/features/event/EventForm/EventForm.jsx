@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { creatEvent, updateEvent } from "../EventAction";
+import { withFirestore } from 'react-redux-firebase'
 import cuid from "cuid";
 import  {geocodeByAddress, getLatLng} from "react-places-autocomplete";
 import { reduxForm, Field } from "redux-form";
@@ -27,11 +28,11 @@ const validate= combineValidators({
 
 })
 
-const mapState = (state, ownProps) => {
-  const Eventid = ownProps.match.params.id;
+const mapState = (state) => {
+  
   let event = {};
-  if (Eventid && state.events.length > 0) {
-    event = state.events.filter(event => event.id === Eventid)[0];
+  if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
+    event = state.firestore.ordered.events[0];
   }
 
   return {
@@ -42,6 +43,9 @@ const actions = {
   creatEvent,
   updateEvent
 };
+
+
+
 const category = [
   { key: "drinks", text: "Drinks", value: "drinks" },
   { key: "culture", text: "Culture", value: "culture" },
@@ -55,6 +59,10 @@ class EventForm extends Component {
     cityLatLng:{},
     venueLatLng:{},
     scriptLaoded:false
+  }
+  async componentDidMount(){
+       const {firestore, match}=this.props
+       await firestore.get(`events/${match.params.id}`)   
   }
   handleCitySelection=(selectedCity)=>{
    geocodeByAddress(selectedCity)
@@ -177,7 +185,7 @@ class EventForm extends Component {
     );
   }
 }
-export default connect(
+export default withFirestore(connect(
   mapState,
   actions
-)(reduxForm({ form: "EventForm",enableReinitialize:true , validate })(EventForm));
+)(reduxForm({ form: "EventForm",enableReinitialize:true , validate })(EventForm)));

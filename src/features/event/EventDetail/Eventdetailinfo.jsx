@@ -4,7 +4,7 @@ import { Segment, Grid, Icon, Button } from "semantic-ui-react";
 import EventDetailedMap from "./EventDetailedMap";
 import format from 'date-fns/format'
 
-class EventDetailedInfo extends Component {
+class Eventdetailinfo extends Component {
   state = {
     showMap: false
   };
@@ -71,4 +71,4 @@ class EventDetailedInfo extends Component {
   }
 }
 
-export default EventDetailedInfo;
+export default Eventdetailinfo;

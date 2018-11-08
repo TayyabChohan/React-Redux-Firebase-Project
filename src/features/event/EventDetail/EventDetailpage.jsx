@@ -15,7 +15,7 @@ const mapState = state => {
   }
   return { event };
 };
-class EventDetailedPage extends Component {
+class EventdetailPage extends Component {
   async componentDidMount() {
     const { firestore, match, history } = this.props;
     let event = await firestore.get(`events/${match.params.id}`);
@@ -44,4 +44,4 @@ class EventDetailedPage extends Component {
   }
 }
 
-export default withFirestore(connect(mapState)(EventDetailedPage));
+export default withFirestore(connect(mapState)(EventdetailPage));
