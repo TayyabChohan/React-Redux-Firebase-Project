@@ -1,8 +1,9 @@
-import { DELETE_EVENT, UPDATE_EVENT, FETCH_EVENT } from './eventConstant'
+import { DELETE_EVENT, FETCH_EVENT } from './eventConstant'
 import { asyncactionstart,asyncactionerror,asyncactionfinish } from '../async/asyncAction'
 import { fetchsampledate } from '../../app/data/mockApi';
 import { toastr } from 'react-redux-toastr'
 import { createNewEvent } from '../../app/common/util/helpers'
+import moment  from 'moment';
 
 export const creatEvent=event=>{
    return async(dispatch, getState,{getFirestore})=>{
@@ -37,12 +38,15 @@ export const DeleteEvent=(eventid)=>{
     }
 }
 export const updateEvent=(event)=>{
-    return async dispatch=>{
+    return async (dispatch, getState, {getFirestore})=>{
+        const firestore=getFirestore();
+      
+        if(event.date !==getState().firestore.ordered.events[0].date){
+            event.date= moment(event.date).toDate();
+        }
+
         try{
-            dispatch({
-             type: UPDATE_EVENT,
-             payload: {event}
-         });
+           await firestore.update(`events/${event.id}`,event)
          toastr.success('Success','Event Has Been Updated')
      } 
         catch(error){
@@ -71,3 +75,17 @@ export const loadevents=()=>{
        }
     }
 }
+
+export const cancellTogle=(cancelled, eventId)=>
+    async (dispatch, getState,{getFirestore})=>{
+        const firestore=getFirestore();
+        try{
+            await firestore.update(`events/${eventId}`,{
+                cancelled:cancelled
+            })
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+

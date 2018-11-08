@@ -2,9 +2,8 @@
 import React, { Component } from "react";
 import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { creatEvent, updateEvent } from "../EventAction";
+import { creatEvent, updateEvent, cancellTogle } from "../EventAction";
 import { withFirestore } from 'react-redux-firebase'
-import cuid from "cuid";
 import  {geocodeByAddress, getLatLng} from "react-places-autocomplete";
 import { reduxForm, Field } from "redux-form";
 import TextInput from "../../../app/common/form/TextInput";
@@ -13,7 +12,6 @@ import SelectInput from "../../../app/common/form/SelectInput";
 import DateInput from "../../../app/common/form/DateInput";
 import Placeinput from "../../../app/common/form/Placeinput";
 import Script  from 'react-load-script'
-import  moment  from 'moment'
 import {composeValidators, combineValidators,isRequired,hasLengthGreaterThan } from "revalidate";
 
 const validate= combineValidators({
@@ -36,12 +34,14 @@ const mapState = (state) => {
   }
 
   return {
-    initialValues: event
+    initialValues: event,
+    event
   };
 };
 const actions = {
   creatEvent,
-  updateEvent
+  updateEvent,
+  cancellTogle
 };
 
 
@@ -62,7 +62,12 @@ class EventForm extends Component {
   }
   async componentDidMount(){
        const {firestore, match}=this.props
-       await firestore.get(`events/${match.params.id}`)   
+       let event= await firestore.get(`events/${match.params.id}`) 
+       if(event.exists){
+         this.setState({
+           venueLatLng:event.data().venueLatLng
+         })
+       }  
   }
   handleCitySelection=(selectedCity)=>{
    geocodeByAddress(selectedCity)
@@ -91,25 +96,20 @@ class EventForm extends Component {
 
   handleScriptLoad=()=>this.setState({scriptLaoded:true});
   onFormSubmit = Values => {
-    Values.date=moment(Values.date).format()
-    Values.venueLatLng=this.state.venueLatLng;
+    Values.venueLatLng=this.state.venueLatLng
     if (this.props.initialValues.id) {
       this.props.updateEvent(Values);
       this.props.history.goBack();
     } else {
-      const newEvent = {
-        ...Values,
-        id: cuid(),
-        hostPhotoURL: "/assets/user.png",
-        hostedBy:"Tayaab"
-      };
-      this.props.creatEvent(newEvent);
+      console.log(Values)
+      this.props.creatEvent(Values);
       this.props.history.push("/events");
     }
+      
   };
 
   render() {
-    const {invalid,submitting, pristine }=this.props;
+    const {invalid,submitting, pristine, event, cancellTogle }=this.props;
     return (
       <Grid>
         <Script
@@ -178,6 +178,14 @@ class EventForm extends Component {
               <Button onClick={this.props.history.goBack} type="button">
                 Cancel
               </Button>
+              <Button
+              onClick={()=>cancellTogle(!event.cancelled, event.id)}
+              type="Button" 
+              color={event.cancelled? 'green':'red'}
+              content={event.cancelled? 'Reactivate Event' :'Cancel Event'}
+              floated='right'
+              
+              />
             </Form>
           </Segment>
         </Grid.Column>
