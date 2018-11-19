@@ -3,7 +3,7 @@ import  EventDashBoard  from '../../features/event/EventDashboard/EventDashboard
 import  HomePage  from '../../features/Home/HomePage.jsx'
 import EventDetailedPage from '../../features/event/EventDetail/EventDetailedPage'
 import  PeopleDashBoar  from '../../features/user/PeopleDashBoard/PeopleDashBoar.jsx'
-import  userDetailPage  from '../../features/user/UserDetail/userDetailPage.jsx'
+import  UserDetailedPage  from '../../features/user/UserDetailed/UserDetailedPage.jsx'
 import  SettingDashBoard  from '../../features/user/Settings/SettingDashBoard.jsx'
 import  EventForm  from '../../features/event/EventForm/EventForm.jsx'
 import  NavBar  from '../../features/nav/navbar/NavBar.jsx'
@@ -34,7 +34,7 @@ class App extends Component {
          <Route path="/event/:id" component={EventDetailedPage} />
          <Route path="/manage/:id" component={EventForm} />
          <Route path="/people" component={PeopleDashBoar} />
-         <Route path="/profile/:id" component={userDetailPage} />
+         <Route path="/profile/:id" component={UserDetailedPage} />
          <Route path="/Settings" component={SettingDashBoard} />
          <Route path="/createEvent" component={EventForm} />
          </Switch>
