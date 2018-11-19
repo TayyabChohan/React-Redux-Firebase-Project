@@ -7,7 +7,7 @@ import { objectToArray } from '../../../app/common//util/helpers'
 
 class EventItem extends Component {
   render() {
-    const { event, DeleteEvent } = this.props;
+    const { event } = this.props;
     return (
       <Segment.Group>
         <Segment>
