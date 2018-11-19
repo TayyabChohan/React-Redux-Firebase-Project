@@ -14,9 +14,9 @@ class EventItem extends Component {
             <Item>
               <Item.Image size="tiny" circular src={event.hostPhotoURL} />
               <Item.Content>
-                <Item.Header as="a">{event.title}</Item.Header>
+                <Item.Header as={Link} to ={`/event/${event.id}`}>{event.title}</Item.Header>
                 <Item.Description>
-                  Hosted by <a>{event.hostedBy}</a>
+                  Hosted by <Link to ={`/profile/${event.hostUid}`}>{event.hostedBy}</Link>
                 </Item.Description>
                 {event.cancelled &&
                 <Label style={{top:'-40px'}} color='red' ribbon='right'content='This event has been Cancelled'/> 

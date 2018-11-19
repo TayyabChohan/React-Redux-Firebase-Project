@@ -1,8 +1,8 @@
 import { DELETE_EVENT, FETCH_EVENT } from "./eventConstant";
 import {
-  asyncactionstart,
-  asyncactionerror,
-  asyncactionfinish
+  asyncActionStart,
+  asyncActionFinish,
+  asyncActionError
 } from "../async/asyncAction";
 import { fetchsampledate } from "../../app/data/mockApi";
 import { toastr } from "react-redux-toastr";
@@ -61,12 +61,12 @@ export const fetchevents = events => {
 export const loadevents = () => {
   return async dispatch => {
     try {
-      dispatch(asyncactionstart());
+      dispatch(asyncActionStart());
       let events = await fetchsampledate();
       dispatch(fetchevents(events));
-      dispatch(asyncactionfinish());
+      dispatch(asyncActionFinish());
     } catch (error) {
-      dispatch(asyncactionerror());
+      dispatch(asyncActionError());
     }
   };
 };

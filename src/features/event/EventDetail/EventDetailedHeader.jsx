@@ -3,6 +3,10 @@ import { Segment, Image, Item, Header, Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import format from "date-fns/format";
 
+const eventImageStyle = {
+  filter: "brightness(30%)"
+};
+
 const eventImageTextStyle = {
   position: "absolute",
   bottom: "5%",
@@ -11,7 +15,13 @@ const eventImageTextStyle = {
   height: "auto",
   color: "white"
 };
-const Eventdetailheader = ({ event, isHost, IsGiong, goingToEvent }) => {
+const EventDetailedHeader = ({
+  event,
+  isHost,
+  isGoing,
+  goingToEvent,
+  cancelGoingToEvent
+}) => {
   let eventDate;
   if (event.date) {
     eventDate = event.date.toDate();
@@ -19,7 +29,11 @@ const Eventdetailheader = ({ event, isHost, IsGiong, goingToEvent }) => {
   return (
     <Segment.Group>
       <Segment basic attached="top" style={{ padding: "0" }}>
-        <Image src={`/assets/categoryImages/${event.category}.jpg`} />
+        <Image
+          src={`/assets/categoryImages/${event.category}.jpg`}
+          fluid
+          style={eventImageStyle}
+        />
 
         <Segment basic style={eventImageTextStyle}>
           <Item.Group>
@@ -46,10 +60,14 @@ const Eventdetailheader = ({ event, isHost, IsGiong, goingToEvent }) => {
       <Segment attached="bottom">
         {!isHost && (
           <div>
-            {IsGiong ? (
-              <Button>Cancel My Place</Button>
+            {isGoing ? (
+              <Button onClick={() => cancelGoingToEvent(event)}>
+                Cancel My Place
+              </Button>
             ) : (
-              <Button onClick={()=>goingToEvent(event)} color="teal">JOIN THIS EVENT</Button>
+              <Button onClick={() => goingToEvent(event)} color="teal">
+                JOIN THIS EVENT
+              </Button>
             )}
           </div>
         )}
@@ -63,4 +81,4 @@ const Eventdetailheader = ({ event, isHost, IsGiong, goingToEvent }) => {
   );
 };
 
-export default Eventdetailheader;
+export default EventDetailedHeader;

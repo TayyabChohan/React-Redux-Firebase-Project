@@ -1,7 +1,12 @@
 import moment from "moment";
 import { toastr } from "react-redux-toastr";
 import cuid from "cuid";
-import {asyncactionstart, asyncactionfinish,asyncactionerror  } from '../async/asyncAction'
+import 
+ {asyncActionStart,
+  asyncActionFinish,
+  asyncActionError}
+ from "../async/asyncAction";
+
 export const updateProfile = user => async (
   dispatch,
   getState,
@@ -12,20 +17,22 @@ export const updateProfile = user => async (
   if (updatedUser.dateOfBirth !== getState().firebase.profile.dateOfBirth) {
     updatedUser.dateOfBirth = moment(updatedUser.dateOfBirth).toDate();
   }
+
   try {
     await firebase.updateProfile(updatedUser);
-    toastr.success("succes", "Profile  Updated");
+    toastr.success("Success", "Profile updated");
   } catch (error) {
     console.log(error);
   }
 };
+
 export const uploadProfileImage = (file, fileName) => async (
   dispatch,
   getState,
   { getFirebase, getFirestore }
 ) => {
-  const firebase = getFirebase();
   const imageName = cuid();
+  const firebase = getFirebase();
   const firestore = getFirestore();
   const user = firebase.auth().currentUser;
   const path = `${user.uid}/user_images`;
@@ -33,14 +40,14 @@ export const uploadProfileImage = (file, fileName) => async (
     name: imageName
   };
   try {
-    dispatch(asyncactionstart())
-    //upload photo to firebase
+    dispatch(asyncActionStart());
+    //upload the file to firebase storage
     let uploadedFile = await firebase.uploadFile(path, file, null, options);
-    //get url of image from firebase
+    //get URL of image
     let downloadURL = await uploadedFile.uploadTaskSnapshot.downloadURL;
-    //get userdoc from firebase
+    //get user doc
     let userDoc = await firestore.get(`users/${user.uid}`);
-    //if the user has photo , if not then update it with new photo
+    //check if user has photo, if not update profile with new image
     if (!userDoc.data().photoURL) {
       await firebase.updateProfile({
         photoURL: downloadURL
@@ -49,7 +56,7 @@ export const uploadProfileImage = (file, fileName) => async (
         photoURL: downloadURL
       });
     }
-    //add new photo to the collections
+    //add the new photo to photos collection
     await firestore.add(
       {
         collection: "users",
@@ -60,16 +67,14 @@ export const uploadProfileImage = (file, fileName) => async (
         name: imageName,
         url: downloadURL
       }
-      
     );
-    dispatch(asyncactionfinish())
+     dispatch(asyncActionFinish());
   } catch (error) {
     console.log(error);
-  dispatch(asyncactionerror())
-    throw new Error("Problem in uploading process");
+    dispatch(asyncActionError());
+    throw new Error("Problem uploading image");
   }
 };
-
 export const deletePhoto = photo => async (
   dispatch,
   getState,
@@ -87,68 +92,71 @@ export const deletePhoto = photo => async (
     });
   } catch (error) {
     console.log(error);
-    throw new Error("Oops Photo No deleted");
+    throw new Error("Problem deleting the photo");
   }
-
 };
 
-export const setMainPhoto=photo=>
-async(dispatch, getState, {getFirebase, getFirestore})=>{
-     const firebase=getFirebase();
-  try{
-  return await firebase.updateProfile({
-    photoURL:photo.url
-  })
+export const setMainPhoto = photo => async (
+  dispatch,
+  setState,
+  { getFirebase, getFirestore }
+) => {
+  const firebase = getFirebase();
+  try {
+    await firebase.updateProfile({
+      photoURL: photo.url
+    });
+  } catch (error) {
+    throw new Error("Problem stting main page");
   }
-  catch(error){
+};
+
+export const goingToEvent = event => async (
+  dispatch,
+  getState,
+  { getFirebase, getFirestore }
+) => {
+  const firestore = getFirestore();
+  const user = firestore.auth().currentUser;
+  const photoURL = getState().firebase.profile.photoURL;
+  const attendee = {
+    going: true,
+    joinDate: Date.now(),
+    photoURL: photoURL,
+    displayName: user.displayName,
+    host: false
+  };
+  try {
+    await firestore.update(`events/${event.id}`, {
+      [`attendees.${user.uid}`]: attendee
+    });
+    await firestore.set(`event_attendee/${event.id}_${user.uid}`, {
+      eventId: event.id,
+      userUid: user.uid,
+      eventDate: event.date,
+      host: false
+    });
+    toastr.success("Success", "You have successfuly signed up to the event");
+  } catch (error) {
     console.log(error);
-    throw new Error('Oops', 'Update is not working for mainProfile')
+    toastr.error("Error", "Problem with signed up event!");
   }
-}
-
-export const goingToEvent=(event)=>
-async (dispatch ,getState, {getFirestore})=>{
-  const firestore= getFirestore();
-  const user= firestore.auth().currentUser;
-  const photoURL= getState().firebase.profile.photoURL;
-  const attendee ={
-    going:true,
-    photoURL:photoURL,
-    host:false,
-    joinDate:Date.now(),
-    displayName:user.displayName
-  }  
-  try{
-  await firestore.update(`events/${event.id}`,{  
-        [`attendees.${user.uid}`]:attendee     
-
-  })
-  await firestore.set(`event_attendee/${event.id}_${user.uid}`,{
-       eventId:event.id,
-       userUid:user.uid,
-       eventDate:event.date,
-       host:false
-  })
-     toastr.success('Success','You Have Singed Up To event')
+};
+export const cancelGoingToEvent = event => async (
+  dispatch,
+  getState,
+  { getFirebase, getFirestore }
+) => {
+  const firestore = getFirestore();
+  const user = firestore.auth().currentUser;
+  try {
+    await firestore.update(`events/${event.id}`, {
+      [`attendees.${user.uid}`]: firestore.FieldValue.delete()
+    });
+    await firestore.delete(`event_attendee/${event.id}_${user.uid}`);
+    toastr.success("Success", "You have removed youreself from the event");
+  } catch (error) {
+    console.log(error);
+    toastr.error("Error", "Sorry problem with cancel sighned event");
   }
-  catch(error){
-    console.log(error)
-    toastr.error('Oops','Problem Signing Up To event')
-
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+};
