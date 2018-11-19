@@ -51,13 +51,7 @@ class EventItem extends Component {
             floated="right"
             content="View"
           />
-          <Button
-            onClick={DeleteEvent(event.id)}
-            as="a"
-            color="red"
-            floated="right"
-            content="Delete"
-          />
+         
         </Segment>
       </Segment.Group>
     );
