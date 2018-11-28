@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { Segment, Image, Item, Header, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
@@ -77,7 +75,3 @@ const EventDetailedHeader = ({ event, isHost, isGoing, goingToEvent, cancelGoing
 };
 
 export default EventDetailedHeader;
-
-
-
-

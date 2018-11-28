@@ -1,13 +1,16 @@
 import { DELETE_EVENT, FETCH_EVENT } from "./eventConstant";
 import {
-  asyncactionstart,
-  asyncactionerror,
-  asyncactionfinish
+  asyncActionStart,
+  asyncActionFinish,
+  asyncActionError
 } from "../async/asyncAction";
+import firebase from '../../app/config/firebase';
 import { fetchsampledate } from "../../app/data/mockApi";
 import { toastr } from "react-redux-toastr";
 import { createNewEvent } from "../../app/common/util/helpers";
 import moment from "moment";
+import { __await } from "tslib";
+
 
 export const creatEvent = event => {
   return async (dispatch, getState, { getFirestore }) => {
@@ -32,12 +35,7 @@ export const creatEvent = event => {
   };
 };
 
-export const DeleteEvent = eventid => {
-  return {
-    type: DELETE_EVENT,
-    payload: { eventid }
-  };
-};
+
 export const updateEvent = event => {
   return async (dispatch, getState, { getFirestore }) => {
     const firestore = getFirestore();
@@ -54,22 +52,30 @@ export const updateEvent = event => {
     }
   };
 };
-export const fetchevents = events => {
-  return { type: FETCH_EVENT, payload: events };
-};
 
-export const loadevents = () => {
-  return async dispatch => {
-    try {
-      dispatch(asyncactionstart());
-      let events = await fetchsampledate();
-      dispatch(fetchevents(events));
-      dispatch(asyncactionfinish());
-    } catch (error) {
-      dispatch(asyncactionerror());
-    }
-  };
-};
+
+export const eventGetForDashboard=()=>
+async(dispatch, getState)=>{
+  let today=new Date(Date.now());
+  const firestore=firebase.firestore();
+  const eventQuery=firestore.collection('events').where('date','>=',today);
+  console.log(eventQuery)
+  try{
+    dispatch(asyncActionStart())
+      let QuerySnaps= await eventQuery.get()
+      console.log(QuerySnaps)
+      let events=[];
+      for(let i=0; i<QuerySnaps.docs.length; i++){
+      let evt={...QuerySnaps.docs[i].date(), id:QuerySnaps.docs[i].id}
+      events.push(evt);
+      }
+      dispatch({type:FETCH_EVENT, payload:{events}})
+      dispatch(asyncActionFinish())
+  }catch(error){
+ console.log(error)
+ dispatch(asyncActionError())
+  }
+}
 
 export const cancellTogle = (cancelled, eventId) => async (
   dispatch,
