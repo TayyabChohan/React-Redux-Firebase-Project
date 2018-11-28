@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Grid } from "semantic-ui-react";
 import EventList from "../eventList/EventList";
-import { firestoreConnect, isEmpty, isLoaded } from "react-redux-firebase";
+import { firestoreConnect } from "react-redux-firebase";
 import { connect } from "react-redux";
 import { eventGetForDashboard } from "../EventAction";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
