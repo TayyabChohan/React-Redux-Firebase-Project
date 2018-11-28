@@ -6,7 +6,7 @@ import format from "date-fns/format";
 
 class EventItem extends Component {
   render() {
-    const { event, DeleteEvent } = this.props;
+    const { event } = this.props;
     return (
       <Segment.Group>
         <Segment>
@@ -50,13 +50,7 @@ class EventItem extends Component {
             floated="right"
             content="View"
           />
-          <Button
-            onClick={DeleteEvent(event.id)}
-            as="a"
-            color="red"
-            floated="right"
-            content="Delete"
-          />
+          
         </Segment>
       </Segment.Group>
     );
