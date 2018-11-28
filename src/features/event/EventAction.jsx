@@ -9,8 +9,6 @@ import { fetchsampledate } from "../../app/data/mockApi";
 import { toastr } from "react-redux-toastr";
 import { createNewEvent } from "../../app/common/util/helpers";
 import moment from "moment";
-import { __await } from "tslib";
-
 
 export const creatEvent = event => {
   return async (dispatch, getState, { getFirestore }) => {
@@ -65,8 +63,8 @@ async(dispatch, getState)=>{
       let QuerySnaps= await eventQuery.get()
       console.log(QuerySnaps)
       let events=[];
-      for(let i=0; i<QuerySnaps.docs.length; i++){
-      let evt={...QuerySnaps.docs[i].date(), id:QuerySnaps.docs[i].id}
+    for(let i=0; i<QuerySnaps.docs.length; i++){
+      let evt={...QuerySnaps.docs[i].data(), id:QuerySnaps.docs[i].id}
       events.push(evt);
       }
       dispatch({type:FETCH_EVENT, payload:{events}})
