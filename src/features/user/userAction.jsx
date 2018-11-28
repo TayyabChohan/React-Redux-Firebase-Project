@@ -113,10 +113,12 @@ async (dispatch ,getState, {getFirestore})=>{
   const photoURL= getState().firebase.profile.photoURL;
   const attendee ={
     going:true,
-    photoURL:photoURL,
-    host:false,
     joinDate:Date.now(),
-    displayName:user.displayName
+    photoURL:photoURL,
+    displayName:user.displayName,
+    host:false,
+    
+    
   }  
   try{
   await firestore.update(`events/${event.id}`,{  
@@ -134,6 +136,23 @@ async (dispatch ,getState, {getFirestore})=>{
   catch(error){
     console.log(error)
     toastr.error('Oops','Problem Signing Up To event')
+
+  }
+}
+export const cancelGoingToEvent=(event)=>
+async(dispatch, getState, {getFirebase})=>{
+  const firestore=getFirebase();
+  const user= firestore.auth().currentUser;
+  try{
+    await firestore.update(`events/${event.id}`,{
+       [`attendees.${user.uid}`]:firestore.FieldValue.delete()
+    })
+    await firestore.delete(`event_attendee/${event.id}_${user.uid}`)
+    toastr.success('Seccuess','you have removed yourself from event')
+
+  }catch(error){
+    console.log(error)
+    toastr.error('Oops', 'Someting is wronge')
 
   }
 }

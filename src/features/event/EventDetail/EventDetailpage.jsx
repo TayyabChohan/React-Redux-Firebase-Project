@@ -7,42 +7,47 @@ import { Grid } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { withFirestore } from "react-redux-firebase";
 import { objectToArray } from "../../../app/common/util/helpers";
-import { goingToEvent } from '../../user/userAction'
+import { goingToEvent, cancelGoingToEvent } from "../../user/userAction";
 const mapState = state => {
   let event = {};
   if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
     event = state.firestore.ordered.events[0];
   }
-  return { 
+  return {
     event,
     auth: state.firebase.auth
-
-   };
+  };
 };
-const actions={
-goingToEvent
-}
+const actions = {
+  goingToEvent,
+  cancelGoingToEvent
+};
 class EventdetailPage extends Component {
   async componentDidMount() {
     const { firestore, match } = this.props;
-     await firestore.setListener(`events/${match.params.id}`);
-    
+    await firestore.setListener(`events/${match.params.id}`);
   }
-  async componentWillUnmount(){
+  async componentWillUnmount() {
     const { firestore, match } = this.props;
     await firestore.unsetListener(`events/${match.params.id}`);
   }
 
   render() {
-    const { event, auth , goingToEvent } = this.props;
+    const { event, auth, goingToEvent, cancelGoingToEvent } = this.props;
     const attendees =
       event && event.attendees && objectToArray(event.attendees);
-      const isHost=event.hostUid===auth.uid;
-      const isGiong=attendees && attendees.some(a => a.id===auth.uid) 
+    const isHost = event.hostUid === auth.uid;
+    const isGoing = attendees && attendees.some(a => a.id === auth.uid);
     return (
       <Grid>
         <Grid.Column width={10}>
-          <Eventdetailheader event={event}  isHost={isHost} isGiong={isGiong} goingToEvent={goingToEvent} />
+          <Eventdetailheader
+            event={event}
+            isHost={isHost}
+            isGiong={isGoing}
+            goingToEvent={goingToEvent}
+            cancelGoingToEvent={cancelGoingToEvent}
+          />
           <Eventdetailinfo event={event} />
           <EventdetailChats />
         </Grid.Column>
@@ -54,4 +59,9 @@ class EventdetailPage extends Component {
   }
 }
 
-export default withFirestore(connect(mapState, actions)(EventdetailPage));
+export default withFirestore(
+  connect(
+    mapState,
+    actions
+  )(EventdetailPage)
+);
