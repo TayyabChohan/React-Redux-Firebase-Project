@@ -5,7 +5,7 @@ export const asyncActionStart=()=>{
         type:ASYNC_ACTION_START
     }
 }
-export const asyncActionFinish=()=>{
+export const asyncActionFinish=()=>{     
     return{
         type:ASYNC_ACTION_FINISH
     }

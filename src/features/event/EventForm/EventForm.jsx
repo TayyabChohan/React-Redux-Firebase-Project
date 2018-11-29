@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { creatEvent, updateEvent, cancellTogle } from "../EventAction";
+import { createEvent, updateEvent, cancellTogle } from "../EventAction";
 import { withFirestore } from 'react-redux-firebase'
 import  {geocodeByAddress, getLatLng} from "react-places-autocomplete";
 import { reduxForm, Field } from "redux-form";
@@ -39,7 +39,7 @@ const mapState = (state) => {
   };
 };
 const actions = {
-  creatEvent,
+  createEvent,
   updateEvent,
   cancellTogle
 };
@@ -104,7 +104,7 @@ class EventForm extends Component {
       this.props.history.goBack();
     } else {
       console.log(Values)
-      this.props.creatEvent(Values);
+      this.props.createEvent(Values);
       this.props.history.push("/events");
     }
       
