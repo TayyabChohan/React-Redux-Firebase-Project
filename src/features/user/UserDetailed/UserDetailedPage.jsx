@@ -38,7 +38,7 @@ const action={
 
 class UserDetailedPage extends Component {
   componentDidMount(){
-    let events=this.props.getUserEvents(this.props.userUid,3);
+    let events=this.props.getUserEvents(this.props.userUid);
     console.log(events);
   }
   render() {
