@@ -19,7 +19,8 @@ const actions = {
 class EventDashBoard extends Component {
   state = {
     moreEvents: false,
-    loadingInitial:true
+    loadingInitial:true,
+    loadedEvents:[]
   };
   async componentDidMount() {
     let next = await this.props.getEventsForDashboard();
@@ -29,6 +30,13 @@ class EventDashBoard extends Component {
         loadingInitial:false
       });
     }
+  }
+  componentWillReceiveProps(nextProps){
+  if(this.props.events!==nextProps.events){
+    this.setState({
+    loadedEvents:[...this.state.loadedEvents, ...nextProps.events]
+    })
+  }
   }
   getNextEvents = async () => {
     const { events } = this.props;
@@ -47,12 +55,12 @@ class EventDashBoard extends Component {
     this.props.deleteEvent(eventId);
   };
   render() {
-    const { events, loading } = this.props;
+    const { loading } = this.props;
     if (this.state.loadingInitial) return <LoadingComponent inverted={true} />;
     return (
       <Grid>
         <Grid.Column width={10}>
-          <EventList  events={events} onEventDelete={this.handleDeleteEvent} />
+          <EventList  events={this.state.loadedEvents} onEventDelete={this.handleDeleteEvent} />
           <Button
             loading={loading} 
             onClick={this.getNextEvents}
