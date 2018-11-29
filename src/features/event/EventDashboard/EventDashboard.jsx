@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Button } from "semantic-ui-react";
+import { Grid, Loader } from "semantic-ui-react";
 import EventList from "../eventList/EventList";
 import { connect } from "react-redux";
 import { getEventsForDashboard } from "../EventAction";
@@ -19,24 +19,24 @@ const actions = {
 class EventDashBoard extends Component {
   state = {
     moreEvents: false,
-    loadingInitial:true,
-    loadedEvents:[]
+    loadingInitial: true,
+    loadedEvents: []
   };
   async componentDidMount() {
     let next = await this.props.getEventsForDashboard();
     if (next && next.docs && next.docs.length > 1) {
       this.setState({
         moreEvents: true,
-        loadingInitial:false
+        loadingInitial: false
       });
     }
   }
-  componentWillReceiveProps(nextProps){
-  if(this.props.events!==nextProps.events){
-    this.setState({
-    loadedEvents:[...this.state.loadedEvents, ...nextProps.events]
-    })
-  }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.events !== nextProps.events) {
+      this.setState({
+        loadedEvents: [...this.state.loadedEvents, ...nextProps.events]
+      });
+    }
   }
   getNextEvents = async () => {
     const { events } = this.props;
@@ -51,29 +51,29 @@ class EventDashBoard extends Component {
     }
   };
 
-  handleDeleteEvent = eventId => () => {
-    this.props.deleteEvent(eventId);
-  };
   render() {
     const { loading } = this.props;
+    const { moreEvents, loadedEvents } = this.state;
     if (this.state.loadingInitial) return <LoadingComponent inverted={true} />;
     return (
       <Grid>
         <Grid.Column width={10}>
-          <EventList  events={this.state.loadedEvents} onEventDelete={this.handleDeleteEvent} />
-          <Button
-            loading={loading} 
-            onClick={this.getNextEvents}
-            disabled={!this.state.moreEvents}
-            content="More"
-            color="green"
-            floated="right"
+          <EventList
+            loading={loading}
+            moreEvents={moreEvents}
+            events={loadedEvents}
+            getNextEvents={this.getNextEvents}
           />
+          
         </Grid.Column>
         <Grid.Column width={6}>
           <EventActivity />
         </Grid.Column>
+        <Grid.Column width={10}>
+          <Loader active={loading} />
+        </Grid.Column>
       </Grid>
+
     );
   }
 }
