@@ -200,11 +200,11 @@ export const getUserEvents = (userUid, activeTabe) => async (
         .orderBy("eventDate", "desc");
   }
   try {
-    const querySnap = await query.get();
+    const querySnap = await query.get(); 
     let events=[];
-    for(let i=0; i<querySnap.docS.docs.length; i++){
+    for(let i=0; i<querySnap.docs.length; i++){
       let evt=await firestore.collection('events').doc(querySnap.docs[i].data().eventId).get();
-      events.push({...evt.data(),id:evt.id});
+      events.push({...evt.data(),id: evt.id});
      
     }
     dispatch({type:FETCH_EVENT,payload:{events}})
