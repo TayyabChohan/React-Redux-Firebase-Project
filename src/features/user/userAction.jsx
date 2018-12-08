@@ -166,7 +166,7 @@ export const cancelGoingToEvent = event => async (
     toastr.error("Oops", "something went wrong");
   }
 };
-export const getUserEvents = (userUid, activeTabe) => async (
+export const getUserEvents = (userId, activeTabe) => async (
   dispatch,
   getState
 ) => {
@@ -178,25 +178,25 @@ export const getUserEvents = (userUid, activeTabe) => async (
   switch (activeTabe) {
     case 1: // passt event
       query = eventRef
-        .where("userUid", "==", userUid)
+        .where("userId", "==", userId)
         .where("eventDate", "<=", today)
         .orderBy("eventDate", "desc");
       break;
     case 2: // future event
       query = eventRef
-        .where("userUid", "==", userUid)
+        .where("userId", "==", userId)
         .where("eventDate", ">=", today)
         .orderBy("eventDate");
       break;
     case 3: // host event
       query = eventRef
-        .where("userUid", "==", userUid)
+        .where("userId", "==", userId)
         .where("host", "==", true)
         .orderBy("eventDate");
       break;
     default:
       query = eventRef
-        .where("userUid", "==", userUid)
+        .where("userId", "==", userId)
         .orderBy("eventDate", "desc");
   }
   try {

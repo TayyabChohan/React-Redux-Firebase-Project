@@ -5,9 +5,11 @@ import EventDetailedChat from "./EventDetailedChat";
 import EventDetailedSidebar from "./EventDetailedSidebar";
 import { Grid } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { withFirestore } from "react-redux-firebase";
+import { withFirestore, firebaseConnect } from "react-redux-firebase";
 import { objectToArray } from "../../../app/common/util/helpers";
 import { goingToEvent, cancelGoingToEvent } from "../../user/userAction";
+import { compose } from 'redux'
+import { addEventComent}  from '../EventAction'
 const mapState = state => {
   let event = {};
   if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
@@ -20,7 +22,8 @@ const mapState = state => {
 };
 const actions = {
   goingToEvent,
-  cancelGoingToEvent
+  cancelGoingToEvent,
+  addEventComent
 };
 class EventDetailedPage extends Component {
   async componentDidMount() {
@@ -33,7 +36,7 @@ class EventDetailedPage extends Component {
   }
 
   render() {
-    const { event, auth, goingToEvent, cancelGoingToEvent } = this.props;
+    const { event, auth, goingToEvent, cancelGoingToEvent,addEventComent } = this.props;
     const attendees =
       event && event.attendees && objectToArray(event.attendees);
     const isHost = event.hostUid === auth.uid;
@@ -49,7 +52,7 @@ class EventDetailedPage extends Component {
             cancelGoingToEvent={cancelGoingToEvent}
           />
           <EventDetailedInfo event={event} />
-          <EventDetailedChat />
+          <EventDetailedChat addEventComent={addEventComent} eventId={event.id} />
         </Grid.Column>
         <Grid.Column width={6}>
           <EventDetailedSidebar attendees={attendees} />
@@ -59,9 +62,11 @@ class EventDetailedPage extends Component {
   }
 }
 
-export default withFirestore(
-  connect(
+export default  compose( 
+  withFirestore, (connect(
     mapState,
-    actions
-  )(EventDetailedPage)
+    actions),
+    
+    firebaseConnect((props)=>([`event_chat${props.match.params.id}`])))
+    (EventDetailedPage)
 );
