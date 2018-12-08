@@ -118,7 +118,7 @@ class EventForm extends Component {
         url="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqe2Hx0D8PX6MdqaIXKQvxr_ysHwj-I04&libraries=places"
         onLoad={this.handleScriptLoad}
         />
-        <Grid.Column width={10}>
+        <Grid.Column width={10}>   
           <Segment>
             <Form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
               <Header sub color="teal" content="Event Details" />
