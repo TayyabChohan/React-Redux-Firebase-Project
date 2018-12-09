@@ -1,11 +1,25 @@
-import React from "react";
+import React, { Component } from 'react'
 import { Segment, Header, Comment } from "semantic-ui-react";
 import EventDetailedChatForm from './EventDetailedChatForm'
 import { Link } from 'react-router-dom'
+import distnceinWords from 'date-fns/distance_in_words'
 
-const EventdetailChats = ({addEventComment,eventId, eventChat}) => {
-  return (
-    <div>
+   
+
+ class EventDetailedChat extends Component {
+    state={
+      showReplyForm:false
+    }
+  handleOpenReplyForm=()=>{
+    this.setState({
+      showReplyForm:true
+    })
+  }
+  render() {
+    const {addEventComment,eventId, eventChat}=this.props
+    const {showReplyForm}=this.state
+    return (
+      <div>
       <Segment
         textAlign="center"
         attached="top"
@@ -24,22 +38,24 @@ const EventdetailChats = ({addEventComment,eventId, eventChat}) => {
             <Comment.Content>
               <Comment.Author as={Link} to={`/profile/${comment.uid}`}>{comment.displayName}</Comment.Author>
               <Comment.Metadata>
-                <div>Today at 5:42PM</div>
+                <div>{distnceinWords(comment.date,Date.now())} ago</div>
               </Comment.Metadata>
-              <Comment.Text>How artistic!</Comment.Text>
+              <Comment.Text>{comment.Text}</Comment.Text>
               <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
+                <Comment.Action onClick={this.handleOpenReplyForm}>Reply</Comment.Action>
+                {showReplyForm && 
+                <EventDetailedChatForm addEventComment={addEventComment} eventId={eventId}/>
+                }
               </Comment.Actions>
             </Comment.Content>
           </Comment>
              ))}
-          
-
         </Comment.Group>
         <EventDetailedChatForm addEventComment={addEventComment} eventId={eventId} />
       </Segment>
     </div>
-  );
-};
+    )
+  }
+}
 
-export default EventdetailChats;
+export default EventDetailedChat

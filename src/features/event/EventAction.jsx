@@ -126,7 +126,7 @@ async (dispatch, getState,{getFirebase})=>{
     date:Date.now()
   }
   try{
-await firebase.push(`event_chat/${eventId}`, newComment)
+     await firebase.push(`event_chat/${eventId}`, newComment);
   }
   catch(error)
   {
