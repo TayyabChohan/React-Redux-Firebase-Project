@@ -6,22 +6,22 @@ import distnceinWords from "date-fns/distance_in_words";
 
 class EventDetailedChat extends Component {
   state = {
-    showReplyForm: false, 
-    selectedCommentId:null
+    showReplyForm: false,
+    selectedCommentId: null
   };
-  handleOpenReplyForm = (id)=>() => {
+  handleOpenReplyForm = id => () => {
     this.setState({
       showReplyForm: true,
-      selectedCommentId:id
+      selectedCommentId: id
     });
   };
 
-handleCloseReplyForm=()=>{
-  this.setState({
-    selectedCommentId:null,
-    showReplyForm:false
-  })
-}
+  handleCloseReplyForm = () => {
+    this.setState({
+      selectedCommentId: null,
+      showReplyForm: false
+    });
+  };
 
   render() {
     const { addEventComment, eventId, eventChat } = this.props;
@@ -55,26 +55,72 @@ handleCloseReplyForm=()=>{
                     </Comment.Metadata>
                     <Comment.Text>{comment.Text}</Comment.Text>
                     <Comment.Actions>
-                      <Comment.Action onClick={this.handleOpenReplyForm(comment.id)}>
+                      <Comment.Action
+                        onClick={this.handleOpenReplyForm(comment.id)}
+                      >
                         Reply
                       </Comment.Action>
-                      {showReplyForm && selectedCommentId===comment.id && (
+                      {showReplyForm && selectedCommentId === comment.id && (
                         <EventDetailedChatForm
                           addEventComment={addEventComment}
                           eventId={eventId}
                           form={`reply_${comment.id}`}
                           closeForm={this.handleCloseReplyForm}
+                          parentId={comment.id}
                         />
                       )}
                     </Comment.Actions>
                   </Comment.Content>
+
+                  {comment.childNodes &&
+                    comment.childNodes.map(child => (
+                      <comment.Group>
+                        <Comment key={child.id}>
+                          <Comment.Avatar
+                            src={child.photoURL || "/assets/user.png"}
+                          />
+                          <Comment.Content>
+                            <Comment.Author
+                              as={Link}
+                              to={`/profile/${child.uid}`}
+                            >
+                              {child.displayName}
+                            </Comment.Author>
+                            <Comment.Metadata>
+                              <div>
+                                {distnceinWords(child.date, Date.now())} ago
+                              </div>
+                            </Comment.Metadata>
+                            <Comment.Text>{child.Text}</Comment.Text>
+                            <Comment.Actions>
+                              <Comment.Action
+                                onClick={this.handleOpenReplyForm(child.id)}
+                              >
+                                Reply
+                              </Comment.Action>
+                              {showReplyForm &&
+                                selectedCommentId === child.id && (
+                                  <EventDetailedChatForm
+                                    addEventComment={addEventComment}
+                                    eventId={eventId}
+                                    form={`reply_${child.id}`}
+                                    closeForm={this.handleCloseReplyForm}
+                                    parentId={child.parentId}
+                                  />
+                                )}
+                            </Comment.Actions>
+                          </Comment.Content>
+                        </Comment>
+                      </comment.Group>
+                    ))}
                 </Comment>
               ))}
           </Comment.Group>
           <EventDetailedChatForm
             addEventComment={addEventComment}
             eventId={eventId}
-            form={'newComment'}
+            form={"newComment"}
+            parentId={0}
           />
         </Segment>
       </div>
