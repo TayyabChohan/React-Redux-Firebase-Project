@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Grid, Loader } from "semantic-ui-react";
 import EventList from "../eventList/EventList";
 import { connect } from "react-redux";
-import { getEventsForDashboard } from "../EventAction";
+import { getEventsForDashboard } from "../eventAction";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import EventActivity from "../EventActivity/EventActivity";
 import { firestoreConnect } from "react-redux-firebase";
@@ -54,7 +54,7 @@ class EventDashBoard extends Component {
   render() {
     const { loading } = this.props;
     const { moreEvents, loadedEvents } = this.state;
-    if (this.state.loadingInitial) return <LoadingComponent inverted={true} />;
+   if (this.state.loadingInitial) return <LoadingComponent inverted={true} />;
     return (
       <Grid>
         <Grid.Column width={10}>

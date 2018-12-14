@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { createEvent, updateEvent, cancellTogle } from "../EventAction";
+import { createEvent, updateEvent, cancellTogle } from "../eventAction";
 import { withFirestore } from 'react-redux-firebase'
 import  {geocodeByAddress, getLatLng} from "react-places-autocomplete";
 import { reduxForm, Field } from "redux-form";
