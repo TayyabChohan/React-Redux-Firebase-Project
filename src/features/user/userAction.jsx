@@ -214,3 +214,30 @@ export const getUserEvents = (userId, activeTabe) => async (
     dispatch(asyncActionError());
   }
 };
+
+
+export const folowUser=(userFolow)=>
+async(dispatch, getState,{getFirestore})=>{
+  const firestore=getFirestore();
+  const user= firestore.auth().currentUser;
+  const following={
+      photoURL:userFolow.photoURL || '/assets/user.png',
+      displayName:userFolow.displayName,
+      city:userFolow.city || 'Unknown Name',
+  }
+  try{
+     await firestore.set({
+       collection: 'users',
+       doc:user.uid,
+       subcollections:[{ collection: 'Following' , doc: userFolow.id}]
+     },
+     following
+     
+     )
+
+  }
+  catch(error){
+console.log(error)
+  }
+}
+
