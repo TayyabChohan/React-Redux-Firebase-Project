@@ -10,7 +10,7 @@ import UserDetailedSidebar from "./UserDetailedSidebar";
 import UserDetailedEvents from "./UserDetailedEvents";
 import { userDetailedQueries } from "../userQueries";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
-import { getUserEvents, folowUser } from '../userAction'
+import { getUserEvents, followUser, unFollowUser } from '../userAction'
 
 const mapState = (state, ownProps) => {
   let userUid = null;
@@ -31,12 +31,14 @@ const mapState = (state, ownProps) => {
     eventsLoading: state.async.loading,
     auth: state.firebase.auth,
     photos: state.firestore.ordered.photos,
-    requesting: state.firestore.status.requesting
+    requesting: state.firestore.status.requesting,
+    following:state.firestore.ordered.following
   };
 };
 const action={
   getUserEvents,
-  folowUser
+  followUser,
+  unFollowUser
 }
 
 class UserDetailedPage extends Component {
@@ -48,19 +50,21 @@ class UserDetailedPage extends Component {
     this.props.getUserEvents(this.props.userUid, data.activeIndex)
   }
   render() {
-    const { profile, photos, auth, match, requesting, events, eventsLoading,folowUser } = this.props;
+    const { profile, photos, auth, match, requesting, events, eventsLoading,followUser ,unFollowUser,following} = this.props;
     const isCurrentUser = auth.uid === match.params.id;
     const loading = Object.values(requesting).some(a => a === true);
+    const isfollowing= !isEmpty(following);
     if (loading) return <LoadingComponent inverted={true} />;
+    
     return (
       <Grid>
         <UserDetailedHeader profile={profile} />
         <UserDetailedDescription profile={profile} />
-        <UserDetailedSidebar profile={profile} folowUser={folowUser} isCurrentUser={isCurrentUser} />
+        <UserDetailedSidebar unFollowUser={unFollowUser} profile={profile} followUser={followUser} isCurrentUser={isCurrentUser} isfollowing={isfollowing} />
         {photos && photos.length > 0 && <UserDetailedPhotos photos={photos} />}
         <UserDetailedEvents events={events} eventsLoading={eventsLoading} changeTab={this.changeTab} />
       </Grid>
-    );
+    ); 
   }
 }
 

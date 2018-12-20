@@ -216,7 +216,7 @@ export const getUserEvents = (userId, activeTabe) => async (
 };
 
 
-export const folowUser=(userFolow)=>
+export const followUser=(userFolow)=>
 async(dispatch, getState,{getFirestore})=>{
   const firestore=getFirestore();
   const user= firestore.auth().currentUser;
@@ -241,3 +241,20 @@ console.log(error)
   }
 }
 
+export const unFollowUser=(unFollow)=>
+async(dispatch, getState,{getFirestore})=>{
+  const firestore=getFirestore();
+  const user=firestore.auth().currentUser;
+  try{
+    await firestore.delete(
+      { 
+        collection:'users',
+        doc:user.uid,
+        subcollections:[{collection:'following', doc:unFollow.id}]
+      }
+    )
+  }
+  catch(error){
+console.log(error)
+  }
+}
