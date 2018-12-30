@@ -35,7 +35,8 @@ const mapState = (state) => {
 
   return {
     initialValues: event,
-    event
+    event,
+    laoding:state.async.laoding
   };
 };
 const actions = {
@@ -94,13 +95,13 @@ class EventForm extends Component {
        }
 
   handleScriptLoad=()=>this.setState({scriptLaoded:true});
-  onFormSubmit = Values => {
+  onFormSubmit = async Values => {
     Values.venueLatLng=this.state.venueLatLng
     if (this.props.initialValues.id) {
       if(Object.keys(Values.venueLatLng).length===0){
       Values.venueLatLng=this.props.event.venueLatLng
       }
-      this.props.updateEvent(Values);
+       await this.props.updateEvent(Values);
       this.props.history.goBack();
     } else {
       console.log(Values)
@@ -111,7 +112,7 @@ class EventForm extends Component {
   };
 
   render() {
-    const {invalid,submitting, pristine, event, cancellTogle }=this.props;
+    const {invalid,submitting, pristine, event, cancellTogle, laoding }=this.props;
     return (
       <Grid>
         <Script
@@ -174,10 +175,10 @@ class EventForm extends Component {
                 showTimeSelect
                 placeholder="Date And Time Event"
               />
-              <Button disabled={invalid || submitting || pristine} positive type="submit">
+              <Button laoding={laoding} disabled={invalid || submitting || pristine} positive type="submit">
                 Submit
               </Button>
-              <Button onClick={this.props.history.goBack} type="button">
+              <Button disabled={laoding} onClick={this.props.history.goBack} type="button">
                 Cancel
               </Button>
               <Button

@@ -54,7 +54,7 @@ class PhotosPage extends Component {
 
   handlephotoDelete=(photo)=>async () =>{
     try{
-      this.props.deletePhoto(photo);
+      await this.props.deletePhoto(photo);
     }catch(error){
       toastr.error('Oops', 'Not Deleted')
     }
