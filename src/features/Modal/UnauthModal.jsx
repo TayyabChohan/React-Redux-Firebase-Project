@@ -8,8 +8,14 @@ const actions = {closeModal, openModal};
 
 class UnauthModal extends Component {
     handleCloseModal=()=>{
-        this.props.history.goBack();
-        this.props.closeModal();
+        if(this.props.location.pathname.includes('/event')){
+            this.props.closeModal(); 
+        }
+        else{
+            this.props.history.goBack();
+            this.props.closeModal();
+        }
+       
     }
     render() {
         const {openModal} = this.props;
