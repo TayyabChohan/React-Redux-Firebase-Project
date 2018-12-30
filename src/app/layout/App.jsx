@@ -11,6 +11,7 @@ import  {Container  } from 'semantic-ui-react'
 import { Route ,Switch } from 'react-router-dom'
 import  testComponent  from '../../features/testArea/TestComponent'
 import ModalManager from '../../features/Modal/ModalManager'
+import { UserIsAuthenticated } from '../../features/auth/authWrapper'
 
 
 class App extends Component {
@@ -32,11 +33,11 @@ class App extends Component {
         <Route path="/testComponent" component={testComponent} />          
          <Route path="/events" component={EventDashBoard} />
          <Route path="/event/:id" component={EventDetailedPage} />
-         <Route path="/manage/:id" component={EventForm} />
-         <Route path="/people" component={PeopleDashBoar} />
-         <Route path="/profile/:id" component={UserDetailedPage} />
-         <Route path="/Settings" component={SettingDashBoard} />
-         <Route path="/createEvent" component={EventForm} />
+         <Route path="/manage/:id" component={UserIsAuthenticated(EventForm)} />
+         <Route path="/people" component={UserIsAuthenticated(PeopleDashBoar)} />
+         <Route path="/profile/:id" component={UserIsAuthenticated(UserDetailedPage)} />
+         <Route path="/Settings" component={UserIsAuthenticated(SettingDashBoard)} />
+         <Route path="/createEvent" component={UserIsAuthenticated(EventForm)} />
          </Switch>
       </Container>
      
