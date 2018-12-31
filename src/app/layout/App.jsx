@@ -12,6 +12,7 @@ import { Route ,Switch } from 'react-router-dom'
 import  testComponent  from '../../features/testArea/TestComponent'
 import ModalManager from '../../features/Modal/ModalManager'
 import { UserIsAuthenticated } from '../../features/auth/authWrapper'
+import NotFound from '../../app/layout/NotFound';
 
 
 class App extends Component {
@@ -38,6 +39,7 @@ class App extends Component {
          <Route path="/profile/:id" component={UserIsAuthenticated(UserDetailedPage)} />
          <Route path="/Settings" component={UserIsAuthenticated(SettingDashBoard)} />
          <Route path="/createEvent" component={UserIsAuthenticated(EventForm)} />
+         <Route path="/error" component={NotFound} />
          </Switch>
       </Container>
      
