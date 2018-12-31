@@ -3,6 +3,7 @@ import { Grid } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { firestoreConnect, isEmpty } from "react-redux-firebase";
 import { compose } from "redux";
+import { toastr } from 'react-redux-toastr'
 import UserDetailedHeader from "./UserDetailedHeader";
 import UserDetailedDescription from "./UserDetailedDescription";
 import UserDetailedPhotos from "./UserDetailedPhotos";
@@ -11,6 +12,7 @@ import UserDetailedEvents from "./UserDetailedEvents";
 import { userDetailedQueries } from "../userQueries";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { getUserEvents, followUser, unFollowUser } from '../userAction'
+
 
 const mapState = (state, ownProps) => {
   let userUid = null;
@@ -43,7 +45,12 @@ const action={
 
 class UserDetailedPage extends Component {
   componentDidMount(){
-    let events=this.props.getUserEvents(this.props.userUid);
+    let user=  this.props.firestore.get(`users/${this.props.match.params.id}`)
+    if(!user.exists){
+      toastr.error('Not Found!','This is not The Envnt You are Looking For! ');
+      this.props.history.push('/error');
+    }
+    let events=  this.props.getUserEvents(this.props.userUid);
     console.log(events);
   }
   changeTab=(e, data)=>{
@@ -52,7 +59,7 @@ class UserDetailedPage extends Component {
   render() {
     const { profile, photos, auth, match, requesting, events, eventsLoading,followUser ,unFollowUser,following} = this.props;
     const isCurrentUser = auth.uid === match.params.id;
-    const loading = Object.values(requesting).some(a => a === true);
+    const loading = requesting[`users/${match.params.id}`]
     const isfollowing= !isEmpty(following);
     if (loading) return <LoadingComponent inverted={true} />;
     
