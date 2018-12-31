@@ -40,6 +40,7 @@ class App extends Component {
          <Route path="/Settings" component={UserIsAuthenticated(SettingDashBoard)} />
          <Route path="/createEvent" component={UserIsAuthenticated(EventForm)} />
          <Route path="/error" component={NotFound} />
+         <Route  component={NotFound} />
          </Switch>
       </Container>
      
