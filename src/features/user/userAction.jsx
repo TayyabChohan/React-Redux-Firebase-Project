@@ -197,48 +197,45 @@ export const cancelGoingToEvent = event => async (
     toastr.error("Oops", "something went wrong");
   }
 };
-export const getUserEvents = (userId, activeTabe) => async (
-  dispatch,
-  getState
-) => {
+export const getUserEvents = (userUid, activeTab) => async (dispatch, getState) => {
   dispatch(asyncActionStart());
   const firestore = firebase.firestore();
-  const today = Date(Date.now());
-  let eventRef = firestore.collection("event_attendee");
+  const today = new Date(Date.now());
+  let eventsRef = firestore.collection('event_attendee');
   let query;
-  switch (activeTabe) {
-    case 1: // passt event
-      query = eventRef
-        .where("userId", "==", userId)
-        .where("eventDate", "<=", today)
-        .orderBy("eventDate", "desc");
+  switch (activeTab) {
+    case 1: // past events
+      query = eventsRef
+        .where('userUid', '==', userUid)
+        .where('eventDate', '<=', today)
+        .orderBy('eventDate', 'desc');
       break;
-    case 2: // future event
-      query = eventRef
-        .where("userId", "==", userId)
-        .where("eventDate", ">=", today)
-        .orderBy("eventDate");
+    case 2: // future events
+      query = eventsRef
+        .where('userUid', '==', userUid)
+        .where('eventDate', '>=', today)
+        .orderBy('eventDate');
       break;
-    case 3: // host event
-      query = eventRef
-        .where("userId", "==", userId)
-        .where("host", "==", true)
-        .orderBy("eventDate");
+    case 3: // hosted events
+      query = eventsRef
+        .where('userUid', '==', userUid)
+        .where('host', '==', true)
+        .orderBy('eventDate', 'desc');
       break;
     default:
-      query = eventRef
-        .where("userId", "==", userId)
-        .orderBy("eventDate", "desc");
+      query = eventsRef.where('userUid', '==', userUid).orderBy('eventDate', 'desc');
   }
   try {
-    const querySnap = await query.get(); 
-    let events=[];
-    for(let i=0; i<querySnap.docs.length; i++){
-      let evt=await firestore.collection('events').doc(querySnap.docs[i].data().eventId).get();
-      events.push({...evt.data(),id: evt.id});
-     
+    let querySnap = await query.get();
+    let events = [];
+
+    for (let i=0; i<querySnap.docs.length; i++) {
+      let evt = await firestore.collection('events').doc(querySnap.docs[i].data().eventId).get();
+      events.push({...evt.data(), id: evt.id})
     }
-    dispatch({type:FETCH_EVENT,payload:{events}})
+
+    dispatch({type: FETCH_EVENT, payload: {events}})
+    
     dispatch(asyncActionFinish());
   } catch (error) {
     console.log(error);
@@ -247,45 +244,41 @@ export const getUserEvents = (userId, activeTabe) => async (
 };
 
 
-export const followUser=(userFolow)=>
-async(dispatch, getState,{getFirestore})=>{
-  const firestore=getFirestore();
-  const user= firestore.auth().currentUser;
-  const following={
-      photoURL:userFolow.photoURL || '/assets/user.png',
-      displayName:userFolow.displayName,
-      city:userFolow.city || 'Unknown Name',
+export const followUser = userToFollow => async (dispatch, getState, {getFirestore}) => {
+  const firestore = getFirestore();
+  const user = firestore.auth().currentUser;
+  const following = {
+    photoURL: userToFollow.photoURL || '/assets/user.png',
+    city: userToFollow.city || 'unknown city',
+    displayName: userToFollow.displayName
   }
-  try{
-     await firestore.set({
-       collection: 'users',
-       doc:user.uid,
-       subcollections:[{ collection: 'Following' , doc: userFolow.id}]
-     },
-     following
-     
-     )
-
-  }
-  catch(error){
-console.log(error)
+  try {
+    await firestore.set(
+      {
+        collection: 'users',
+        doc: user.uid,
+        subcollections: [{collection: 'following', doc: userToFollow.id}]
+      },
+      following
+    );
+  } catch (error) {
+    console.log(error);
   }
 }
 
-export const unFollowUser=(unFollow)=>
-async(dispatch, getState,{getFirestore})=>{
-  const firestore=getFirestore();
-  const user=firestore.auth().currentUser;
-  try{
-    await firestore.delete(
-      { 
-        collection:'users',
-        doc:user.uid,
-        subcollections:[{collection:'following', doc:unFollow.id}]
-      }
-    )
+export const unfollowUser  = (userToUnfollow) =>
+  async (dispatch, getState, {getFirestore}) => {
+    const firestore = getFirestore();
+    const user = firestore.auth().currentUser;
+    try {
+      await firestore.delete({
+        collection: 'users',
+        doc: user.uid,
+        subcollections: [{collection: 'following', doc: userToUnfollow.id}]
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
-  catch(error){
-console.log(error)
-  }
-}
+
+

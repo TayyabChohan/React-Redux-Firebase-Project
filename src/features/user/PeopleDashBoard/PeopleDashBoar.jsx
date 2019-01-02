@@ -1,33 +1,32 @@
 import React from 'react';
 import { Grid, Segment, Header, Card } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { firestoreConnect } from 'react-redux-firebase'
 import PersonCard from './PersonCard';
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import {firestoreConnect } from 'react-redux-firebase'
- 
-const query=({auth})=>{
-  return[
+
+const query = ({auth}) => {
+  return [
     {
-    collection:'users',
-    doc:auth.uid,
-    subcollections:[{collection:'following'}],
-    storeAs:'following'
-
+      collection: 'users',
+      doc: auth.uid,
+      subcollections: [{collection: 'following'}],
+      storeAs: 'following'
+    },
+    {
+      collection: 'users',
+      doc: auth.uid,
+      subcollections: [{collection: 'followers'}],
+      storeAs: 'followers'
     }
-    ,
-    {collection:'users',
-    doc:auth.uid,
-    subcollections:[{collection:'followers'}],
-    storeAs:'followers'}
   ]
-};
-const mapState=state=>({
-  followings:state.firestore.ordered.following,
-  followers:state.firestore.ordered.followers,
-  auth:state.firebase.auth
+}
+
+const mapState = state => ({
+  followings: state.firestore.ordered.following,
+  followers: state.firestore.ordered.followers,
+  auth: state.firebase.auth
 })
-
-
 
 const PeopleDashboard = ({followings, followers}) => {
   return (
@@ -36,20 +35,13 @@ const PeopleDashboard = ({followings, followers}) => {
         <Segment>
           <Header dividing content="People following me" />
           <Card.Group itemsPerRow={8} stackable>
-          {followers && followers.map(follower=>
-             <PersonCard key={follower.id} user={follower} />
-            )}
-           
+          {followers && followers.map(follower => <PersonCard key={follower.id} user={follower} />)}
           </Card.Group>
         </Segment>
         <Segment>
           <Header dividing content="People I'm following" />
           <Card.Group itemsPerRow={8} stackable>
-          {followings && followings.map(following=>
-            <PersonCard key={following.id} user={following} />
-            ) }
-            
-            
+            {followers && followings.map(following => <PersonCard key={following.id} user={following} />)}
           </Card.Group>
         </Segment>
       </Grid.Column>
@@ -57,4 +49,4 @@ const PeopleDashboard = ({followings, followers}) => {
   );
 };
 
-export default compose(connect(mapState), firestoreConnect(props=>query(props)) ) (PeopleDashboard);
+export default compose(connect(mapState), firestoreConnect(props => query(props)))(PeopleDashboard);

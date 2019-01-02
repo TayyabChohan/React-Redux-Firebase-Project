@@ -39,17 +39,16 @@ class NavBar extends Component {
           <Container>
             <Menu.Item header as={Link} to="/">
               <img src="assets/logo.png" alt="logo" />
-              Re-vents
+              YouChat
             </Menu.Item>
             <Menu.Item as={NavLink} to="/events"  name="Events" />
-            <Menu.Item as={NavLink} to="/testComponent"  name="Test" />
             
             {
               authenticated && <Menu.Item as={NavLink} to="/people"  name="people"/>
             }
             
             <Menu.Item>
-              {auth && <Button 
+              {auth&& authenticated && <Button 
               as={Link} to={"/createEvent"}
                 floated="right"
                 positive

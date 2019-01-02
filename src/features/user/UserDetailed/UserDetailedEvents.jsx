@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom'
 import format from 'date-fns/format'
 
 const panes=[
-  {menuItem: 'all Events' ,pane:{key: 'allEvents'}},
-  {menuItem: 'past Events' ,pane:{key: 'pastEvents'}},
-  {menuItem: 'future Events' ,pane:{key: 'futureEvents'}},
-  {menuItem: 'hosting' ,pane:{key: 'hosted'}}
+  {menuItem: 'All Events' ,pane:{key: 'AllEvents'}},
+  {menuItem: 'Past Events' ,pane:{key: 'PastEvents'}},
+  {menuItem: 'Future Events' ,pane:{key: 'FutureEvents'}},
+  {menuItem: 'Hosting' ,pane:{key: 'Hosted'}}
 ]
 
 const UserDeteiledEvents = ({events ,eventsLoading, changeTab}) => {
